@@ -17,6 +17,7 @@ import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.Marker
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -38,6 +39,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // follow this code to get current location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Bottom Sheet
+        BottomSheetBehavior.from(findViewById(R.id.bottom_sheet)).apply {
+            peekHeight = 400
+            this.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
 
     }
 
