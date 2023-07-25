@@ -6,6 +6,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
+import androidx.core.view.WindowCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -45,6 +46,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             peekHeight = 400
             this.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Hide Action Bar
+        supportActionBar?.hide()
 
     }
 
