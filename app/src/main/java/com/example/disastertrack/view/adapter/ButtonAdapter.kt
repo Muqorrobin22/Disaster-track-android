@@ -32,6 +32,8 @@ class ButtonAdapter(private val buttonActions: List<ButtonAction>, private val o
             button.text = action.getName()
             button.setOnClickListener {
                 onButtonClick(position)
+                button.isSelected = !button.isSelected
+                updateButtonBackground(button)
 //                action.performAction()
 //                // Perform action based on the button clicked
 //                when (action) {
@@ -43,6 +45,14 @@ class ButtonAdapter(private val buttonActions: List<ButtonAction>, private val o
 //                    }
 //                }
             }
+        }
+
+        fun updateButtonBackground(button: Button) {
+            val activeBackground = R.drawable.button_background_active
+            val inactiveBackground = R.drawable.button_background_inactive
+
+            val backgroundResource = if (button.isSelected) activeBackground else inactiveBackground
+            button.setBackgroundResource(backgroundResource)
         }
 
         private fun performAction1() {
