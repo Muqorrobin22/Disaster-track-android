@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 import com.example.disastertrack.utils.ButtonAction
 
-class ButtonAdapter(private val buttonActions: List<ButtonAction>) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
+class ButtonAdapter(private val buttonActions: List<ButtonAction>, private val onButtonClick: (Int) -> Unit) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_button, parent, false)
@@ -18,20 +18,21 @@ class ButtonAdapter(private val buttonActions: List<ButtonAction>) : RecyclerVie
 
     override fun onBindViewHolder(holder: ButtonViewHolder, position: Int) {
         val buttonText = buttonActions[position]
-        holder.bindButton(buttonText)
+        holder.bindButton(buttonText, position)
     }
 
     override fun getItemCount(): Int {
         return buttonActions.size
     }
 
-    class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val button: Button = itemView.findViewById(R.id.button_disaster)
 
-        fun bindButton(action: ButtonAction) {
+        fun bindButton(action: ButtonAction, position: Int) {
             button.text = action.getName()
             button.setOnClickListener {
-                action.performAction()
+                onButtonClick(position)
+//                action.performAction()
 //                // Perform action based on the button clicked
 //                when (action) {
 //                    "Action 1" -> performAction1()

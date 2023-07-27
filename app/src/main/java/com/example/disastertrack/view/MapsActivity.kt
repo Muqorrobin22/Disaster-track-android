@@ -40,7 +40,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var recyclerViewReport: RecyclerView
     private lateinit var recyclerViewButton: RecyclerView
-    private lateinit var reportAdapater : ReportAdapter
+    private lateinit var reportAdapter : ReportAdapter
+
+    private val buttonActions = listOf(ActionBanjirImpl())
+
 
     private val retrofit by lazy {
         Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url).addConverterFactory(MoshiConverterFactory.create()).build()
@@ -76,14 +79,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
-        getReportResponseByTime()
+//        getReportResponseByTime()
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
 //        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
-        val buttonActions = listOf(ActionBanjirImpl())
+//        val buttonActions = listOf(ActionBanjirImpl())
 
-        val adapter = ButtonAdapter(buttonActions)
+        val adapter = ButtonAdapter(buttonActions) { position ->
+            onButtonClick(position)
+        }
         recyclerViewButton.adapter = adapter
         recyclerViewButton.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false )
 
@@ -145,8 +150,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     if(apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        reportAdapater =  ReportAdapter(geometries)
-                        recyclerViewReport.adapter = reportAdapater
+                        reportAdapter =  ReportAdapter(geometries)
+                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
@@ -157,6 +162,42 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+    }
+
+    private fun getReportsByDisaster(disasterType : String) {
+        val call = reportApiServiceImpl.getReportByDisaster(disasterType)
+        call.enqueue(object : Callback<ReportsData> {
+            override fun onFailure(call: Call<ReportsData>, t: Throwable) {
+                Log.e("MainActivity", "Failed to get search result", t)
+            }
+
+            override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    if(apiResponse != null) {
+                        val geometries = apiResponse.result.objects.output.geometries
+
+                        reportAdapter =  ReportAdapter(geometries)
+                        recyclerViewReport.adapter = reportAdapter
+                    }
+
+                    Log.d("MainActivity", "response : ${response.body()}")
+                } else {
+                    Log.e("MainActivity", "Failed to get search results\n${
+                        response.errorBody()?.string().orEmpty()
+                    }")
+                }
+            }
+        })
+    }
+
+    private fun onButtonClick(position: Int) {
+        val action = buttonActions[position]
+        action.performAction()
+
+        when (action) {
+            is ActionBanjirImpl -> getReportsByDisaster("flood")
+        }
     }
 
     companion object {
