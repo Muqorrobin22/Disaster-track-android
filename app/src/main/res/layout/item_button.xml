@@ -11,6 +11,7 @@
         android:id="@+id/button_disaster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:gravity="center"
         android:text="Button"
         android:textSize="12sp"

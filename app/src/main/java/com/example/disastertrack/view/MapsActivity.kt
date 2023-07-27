@@ -36,18 +36,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
     // Adding this for current location
-    private lateinit var lastLocation : Location
+    private lateinit var lastLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var recyclerViewReport: RecyclerView
     private lateinit var recyclerViewButton: RecyclerView
-    private lateinit var reportAdapter : ReportAdapter
+    private lateinit var reportAdapter: ReportAdapter
 
-    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl(), ActionGunungImpl(), ActionKebakaranImpl(), ActionGempaImpl())
+    private val buttonActions = listOf(
+        ActionBanjirImpl(),
+        ActionKabutImpl(),
+        ActionGunungImpl(),
+        ActionKebakaranImpl(),
+        ActionGempaImpl(),
+        ActionBeranginImpl()
+    )
 
 
     private val retrofit by lazy {
-        Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url).addConverterFactory(MoshiConverterFactory.create()).build()
+        Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url)
+            .addConverterFactory(MoshiConverterFactory.create()).build()
     }
 
     private val reportApiServiceImpl by lazy {
@@ -91,7 +100,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             onButtonClick(position)
         }
         recyclerViewButton.adapter = adapter
-        recyclerViewButton.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false )
+        recyclerViewButton.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
     }
 
@@ -115,7 +125,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ) {
 
 
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_REQUEST_CODE
+            )
             return
         }
         mMap.isMyLocationEnabled = true
@@ -139,7 +153,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMarkerClick(p0: Marker) = false
 
     private fun getReportResponseByTime() {
-        val call = reportApiServiceImpl.getReportByYearStartToEnd("2020-12-04T00:00:00+0700", "2020-12-06T05:00:00+0700")
+        val call = reportApiServiceImpl.getReportByYearStartToEnd(
+            "2020-12-04T00:00:00+0700",
+            "2020-12-06T05:00:00+0700"
+        )
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
                 Log.e("MainActivity", "Failed to get search result", t)
@@ -148,24 +165,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    if(apiResponse != null) {
+                    if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        reportAdapter =  ReportAdapter(geometries)
+                        reportAdapter = ReportAdapter(geometries)
                         recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
                 } else {
-                    Log.e("MainActivity", "Failed to get search results\n${
-                        response.errorBody()?.string().orEmpty()
-                    }")
+                    Log.e(
+                        "MainActivity", "Failed to get search results\n${
+                            response.errorBody()?.string().orEmpty()
+                        }"
+                    )
                 }
             }
         })
     }
 
-    private fun getReportsByDisaster(disasterType : String) {
+    private fun getReportsByDisaster(disasterType: String) {
         val call = reportApiServiceImpl.getReportByDisaster(disasterType)
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -175,18 +194,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    if(apiResponse != null) {
+                    if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        reportAdapter =  ReportAdapter(geometries)
+                        reportAdapter = ReportAdapter(geometries)
                         recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response ${disasterType} : ${response.body()}")
                 } else {
-                    Log.e("MainActivity", "Failed to get search results\n${
-                        response.errorBody()?.string().orEmpty()
-                    }")
+                    Log.e(
+                        "MainActivity", "Failed to get search results\n${
+                            response.errorBody()?.string().orEmpty()
+                        }"
+                    )
                 }
             }
         })
