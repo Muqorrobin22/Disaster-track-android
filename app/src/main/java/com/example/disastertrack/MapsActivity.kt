@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -19,10 +20,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
+import com.example.disastertrack.model.data.ReportsData
+import com.example.disastertrack.model.service.ReportApiService
+import com.example.disastertrack.utils.BaseURL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import retrofit2.*
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -31,6 +37,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     // Adding this for current location
     private lateinit var lastLocation : Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val retrofit by lazy {
+        Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url).addConverterFactory(MoshiConverterFactory.create()).build()
+    }
+
+    private val reportApiServiceImpl by lazy {
+        retrofit.create(ReportApiService::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +68,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // Hide Action Bar
         supportActionBar?.hide()
 
+        getReportsResponse()
 
     }
 
@@ -99,6 +114,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMarkerClick(p0: Marker) = false
+
+    private fun getReportsResponse() {
+        val call = reportApiServiceImpl.getReportByYearStartToEnd("2020-12-04T00:00:00+0700", "2020-12-06T05:00:00+0700")
+        call.enqueue(object : Callback<ReportsData> {
+            override fun onFailure(call: Call<ReportsData>, t: Throwable) {
+                Log.e("MainActivity", "Failed to get search result", t)
+            }
+
+            override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+
+                    Log.d("MainActivity", "response : ${response.body()}")
+                } else {
+                    Log.e("MainActivity", "Failed to get search results\n${
+                        response.errorBody()?.string().orEmpty()
+                    }")
+                }
+            }
+        })
+    }
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1
