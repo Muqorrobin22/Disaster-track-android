@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity">
+    tools:context=".view.MapsActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:tag="map_tag"
@@ -31,6 +31,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/rounded"
             app:enableEdgeToEdge="true"
+            android:paddingLeft="20dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
@@ -41,7 +42,27 @@
                 android:layout_gravity="center|top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/baseline_remove_24" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Informasi Berita Terkini"
+                android:layout_marginTop="25dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_report"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="70dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
         </FrameLayout>
+
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
