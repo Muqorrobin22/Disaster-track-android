@@ -7,8 +7,9 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
+import com.example.disastertrack.utils.ButtonAction
 
-class ButtonAdapter(private val buttonActions: List<String>) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
+class ButtonAdapter(private val buttonActions: List<ButtonAction>) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_button, parent, false)
@@ -24,21 +25,22 @@ class ButtonAdapter(private val buttonActions: List<String>) : RecyclerView.Adap
         return buttonActions.size
     }
 
-    inner class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val button: Button = itemView.findViewById(R.id.button_disaster)
 
-        fun bindButton(action: String) {
-            button.text = action
+        fun bindButton(action: ButtonAction) {
+            button.text = action.getName()
             button.setOnClickListener {
-                // Perform action based on the button clicked
-                when (action) {
-                    "Action 1" -> performAction1()
-                    "Action 2" -> performAction2()
-                    // Add more cases for other actions as needed
-                    else -> {
-                        // Handle default action or do nothing
-                    }
-                }
+                action.performAction()
+//                // Perform action based on the button clicked
+//                when (action) {
+//                    "Action 1" -> performAction1()
+//                    "Action 2" -> performAction2()
+//                    // Add more cases for other actions as needed
+//                    else -> {
+//                        // Handle default action or do nothing
+//                    }
+//                }
             }
         }
 
@@ -46,6 +48,7 @@ class ButtonAdapter(private val buttonActions: List<String>) : RecyclerView.Adap
             // Implement action 1 logic here
             Toast.makeText(itemView.context, "Action 1 clicked!", Toast.LENGTH_SHORT).show()
         }
+
 
         private fun performAction2() {
             // Implement action 2 logic here

@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.ReportsData
+import com.example.disastertrack.model.implement.ActionBanjirImpl
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
 import com.example.disastertrack.view.adapter.ButtonAdapter
@@ -75,11 +76,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
-        getReportsResponse()
+        getReportResponseByTime()
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
-        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
+//        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
+        val buttonActions = listOf(ActionBanjirImpl())
 
         val adapter = ButtonAdapter(buttonActions)
         recyclerViewButton.adapter = adapter
@@ -130,7 +132,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerClick(p0: Marker) = false
 
-    private fun getReportsResponse() {
+    private fun getReportResponseByTime() {
         val call = reportApiServiceImpl.getReportByYearStartToEnd("2020-12-04T00:00:00+0700", "2020-12-06T05:00:00+0700")
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
