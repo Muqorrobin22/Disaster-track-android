@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -19,6 +21,7 @@ import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.ReportsData
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
+import com.example.disastertrack.view.adapter.ReportAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.Marker
@@ -33,6 +36,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     // Adding this for current location
     private lateinit var lastLocation : Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var reportAdapater : ReportAdapter
 
     private val retrofit by lazy {
         Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url).addConverterFactory(MoshiConverterFactory.create()).build()
@@ -64,6 +69,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // Hide Action Bar
         supportActionBar?.hide()
 
+        recyclerView = findViewById(R.id.recycler_view_report)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         getReportsResponse()
 
     }
@@ -121,6 +128,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
+                    if(apiResponse != null) {
+                        val geometries = apiResponse.result.objects.output.geometries
+
+                        reportAdapater =  ReportAdapter(geometries)
+                        recyclerView.adapter = reportAdapater
+                    }
 
                     Log.d("MainActivity", "response : ${response.body()}")
                 } else {
