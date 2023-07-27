@@ -20,8 +20,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.ReportsData
 import com.example.disastertrack.model.implement.ActionBanjirImpl
+import com.example.disastertrack.model.implement.ActionKabutImpl
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
+import com.example.disastertrack.utils.DisasterType
 import com.example.disastertrack.view.adapter.ButtonAdapter
 import com.example.disastertrack.view.adapter.ReportAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -42,7 +44,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter : ReportAdapter
 
-    private val buttonActions = listOf(ActionBanjirImpl())
+    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl())
 
 
     private val retrofit by lazy {
@@ -79,7 +81,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
-//        getReportResponseByTime()
+        getReportResponseByTime()
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
@@ -181,7 +183,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         recyclerViewReport.adapter = reportAdapter
                     }
 
-                    Log.d("MainActivity", "response : ${response.body()}")
+                    Log.d("MainActivity", "response ${disasterType} : ${response.body()}")
                 } else {
                     Log.e("MainActivity", "Failed to get search results\n${
                         response.errorBody()?.string().orEmpty()
@@ -196,7 +198,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         action.performAction()
 
         when (action) {
-            is ActionBanjirImpl -> getReportsByDisaster("flood")
+            is ActionBanjirImpl -> getReportsByDisaster(DisasterType.BANJIR.url)
+            is ActionKabutImpl -> getReportsByDisaster(DisasterType.KABUT.url)
         }
     }
 
