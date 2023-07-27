@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.ReportsData
 import com.example.disastertrack.model.implement.ActionBanjirImpl
+import com.example.disastertrack.model.implement.ActionGunungImpl
 import com.example.disastertrack.model.implement.ActionKabutImpl
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
@@ -44,7 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter : ReportAdapter
 
-    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl())
+    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl(), ActionGunungImpl())
 
 
     private val retrofit by lazy {
@@ -200,6 +201,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         when (action) {
             is ActionBanjirImpl -> getReportsByDisaster(DisasterType.BANJIR.url)
             is ActionKabutImpl -> getReportsByDisaster(DisasterType.KABUT.url)
+            is ActionGunungImpl -> getReportsByDisaster(DisasterType.GUNUNGMELETUS.url)
         }
     }
 
