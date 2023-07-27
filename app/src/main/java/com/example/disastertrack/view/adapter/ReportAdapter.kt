@@ -39,11 +39,15 @@ class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<
 
         // Add any other data you want to display with the image
         if(titleText == null || titleText.isEmpty()) {
-            holder.titleItem.setText("Judul Tidak Tersedia")
+            holder.titleItem.text = "Judul Tidak Tersedia"
+        } else {
+            holder.titleItem.text = titleText
         }
 
         if(descText == null || descText.isEmpty()) {
-            holder.descriptionItem.setText("Deskripsi tidak tersedia")
+            holder.descriptionItem.text = "Deskripsi tidak tersedia"
+        } else {
+            holder.descriptionItem.text = descText
         }
     }
 
