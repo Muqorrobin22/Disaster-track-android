@@ -19,10 +19,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.ReportsData
-import com.example.disastertrack.model.implement.ActionBanjirImpl
-import com.example.disastertrack.model.implement.ActionGunungImpl
-import com.example.disastertrack.model.implement.ActionKabutImpl
-import com.example.disastertrack.model.implement.ActionKebakaranImpl
+import com.example.disastertrack.model.implement.*
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
 import com.example.disastertrack.utils.DisasterType
@@ -46,7 +43,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter : ReportAdapter
 
-    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl(), ActionGunungImpl(), ActionKebakaranImpl())
+    private val buttonActions = listOf(ActionBanjirImpl(), ActionKabutImpl(), ActionGunungImpl(), ActionKebakaranImpl(), ActionGempaImpl())
 
 
     private val retrofit by lazy {
@@ -204,6 +201,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             is ActionKabutImpl -> getReportsByDisaster(DisasterType.KABUT.url)
             is ActionGunungImpl -> getReportsByDisaster(DisasterType.GUNUNGMELETUS.url)
             is ActionKebakaranImpl -> getReportsByDisaster(DisasterType.KEBAKARAN.url)
+            is ActionGempaImpl -> getReportsByDisaster(DisasterType.GEMPA.url)
         }
     }
 
