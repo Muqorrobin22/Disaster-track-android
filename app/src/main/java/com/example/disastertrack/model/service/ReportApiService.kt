@@ -16,4 +16,9 @@ interface ReportApiService {
     fun getReportByTimeperiod(
         @Query("timeperiod") timePeriod: Int,
     ) : Call<ReportsData>
+
+    @GET("reports")
+    fun getReportByDisaster(
+        @Query("disaster") disaster: String
+    ) : Call<ReportsData>
 }

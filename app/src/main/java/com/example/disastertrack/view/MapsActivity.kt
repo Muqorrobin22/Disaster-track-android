@@ -79,7 +79,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
-        val buttonActions = listOf("Action 1", "Action 2", "Action 3", "Action 4")
+        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
 
         val adapter = ButtonAdapter(buttonActions)
         recyclerViewButton.adapter = adapter
