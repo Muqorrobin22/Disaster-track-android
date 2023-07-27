@@ -202,6 +202,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             is ActionGunungImpl -> getReportsByDisaster(DisasterType.GUNUNGMELETUS.url)
             is ActionKebakaranImpl -> getReportsByDisaster(DisasterType.KEBAKARAN.url)
             is ActionGempaImpl -> getReportsByDisaster(DisasterType.GEMPA.url)
+            is ActionBeranginImpl -> getReportsByDisaster(DisasterType.BERANGIN.url)
         }
     }
 
