@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 import com.example.disastertrack.model.data.Geometry
 import com.squareup.picasso.Picasso
+import org.w3c.dom.Text
 
 class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
@@ -20,6 +22,8 @@ class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         val report = reports[position]
         val imageUrl = report.properties.image_url
+        val titleText = report.properties.title
+        val descText = report.properties.text
 
         // Load the image into the ImageView using Picasso
         if (!imageUrl.isNullOrEmpty()) {
@@ -34,12 +38,21 @@ class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<
         }
 
         // Add any other data you want to display with the image
+        if(titleText == null || titleText.isEmpty()) {
+            holder.titleItem.setText("Judul Tidak Tersedia")
+        }
+
+        if(descText == null || descText.isEmpty()) {
+            holder.descriptionItem.setText("Deskripsi tidak tersedia")
+        }
     }
 
     override fun getItemCount(): Int = reports.size
 
     class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        val titleItem : TextView = itemView.findViewById(R.id.title_item)
+        val descriptionItem : TextView = itemView.findViewById(R.id.desc_item)
 
         // Add other views from the item layout here if needed
     }
