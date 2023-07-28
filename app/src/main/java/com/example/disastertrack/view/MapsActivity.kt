@@ -6,6 +6,9 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -185,6 +188,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun getReportsByDisaster(disasterType: String) {
+        val emptyResultTextView : TextView = findViewById(R.id.no_result)
+        val emptyResultImageView : ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByDisaster(disasterType)
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -197,8 +202,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        reportAdapter = ReportAdapter(geometries)
-                        recyclerViewReport.adapter = reportAdapter
+                        if(geometries.isNullOrEmpty()) {
+                            emptyResultTextView.visibility = View.VISIBLE
+                            emptyResultImageView.visibility = View.VISIBLE
+                            recyclerViewReport.visibility = View.GONE
+                        } else {
+                            emptyResultTextView.visibility = View.GONE
+                            emptyResultImageView.visibility = View.GONE
+                            recyclerViewReport.visibility = View.VISIBLE
+                            reportAdapter = ReportAdapter(geometries)
+                            recyclerViewReport.adapter = reportAdapter
+                        }
+
+//                        reportAdapter = ReportAdapter(geometries)
+//                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response ${disasterType} : ${response.body()}")

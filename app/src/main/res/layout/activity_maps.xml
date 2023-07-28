@@ -65,6 +65,24 @@
                 android:textStyle="bold"
                 android:textSize="18sp"/>
 
+            <ImageView
+                android:id="@+id/no_result_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="115dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/no_results_found" />
+
+            <TextView
+                android:id="@+id/no_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OOOPS data kosong"
+                android:layout_marginTop="85dp"
+                android:layout_gravity="center|top"
+                android:gravity="center"
+                android:textSize="18sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_report"
