@@ -102,9 +102,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 //        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
 //        val buttonActions = listOf(ActionBanjirImpl())
 
-        val adapter = ButtonAdapter(buttonActions) { position ->
-            onButtonClick(position)
-        }
+//        val adapter = ButtonAdapter(buttonActions) { position ->
+//            onButtonClick(position)
+//        }
+        val adapter = ButtonAdapter(
+            buttonActions,
+            onButtonClick = { position -> onButtonClick(position) },
+            onButtonMarkerClick = { position -> onButtonMarkerClick(position) })
         recyclerViewButton.adapter = adapter
         recyclerViewButton.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -165,9 +169,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerClick(p0: Marker) = false
 
+    private fun onButtonMarkerClick(position: Int) {
+        // Handle marker click for the button at the given position
+        if (position < disasterMarkers.size) {
+            // Get the marker associated with the button position
+            val marker = disasterMarkers[position]
+            // Do whatever you want with the marker (e.g., animate the camera to it)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 15f))
+        }
+    }
+
     private fun getReportResponseByTime() {
-        val emptyResultTextView : TextView = findViewById(R.id.no_result)
-        val emptyResultImageView : ImageView = findViewById(R.id.no_result_image)
+        val emptyResultTextView: TextView = findViewById(R.id.no_result)
+        val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "2020-12-04T00:00:00+0700",
             "2020-12-06T05:00:00+0700"
@@ -183,7 +197,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        if(geometries.isNullOrEmpty()) {
+                        if (geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
                             recyclerViewReport.visibility = View.GONE
@@ -212,8 +226,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun getReportsByDisaster(disasterType: String) {
-        val emptyResultTextView : TextView = findViewById(R.id.no_result)
-        val emptyResultImageView : ImageView = findViewById(R.id.no_result_image)
+        val emptyResultTextView: TextView = findViewById(R.id.no_result)
+        val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByDisaster(disasterType)
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -228,7 +242,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
                         clearDisasterMarkers()
-                        if(geometries.isNullOrEmpty()) {
+                        if (geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
                             recyclerViewReport.visibility = View.GONE
@@ -244,7 +258,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                             val mapBuilder = LatLngBounds.Builder()
                             for (geometry in geometries) {
-                                val latLng = LatLng(geometry.coordinates[1], geometry.coordinates[0])
+                                val latLng =
+                                    LatLng(geometry.coordinates[1], geometry.coordinates[0])
                                 var marker = placeMarkerOnMapDisaster(latLng)!!
                                 disasterMarkers.add(marker)
                                 mapBuilder.include(latLng)
@@ -300,7 +315,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         disasterMarkers.clear()
     }
-
 
 
     companion object {

@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 import com.example.disastertrack.utils.ButtonAction
 
-class ButtonAdapter(private val buttonActions: List<ButtonAction>, private val onButtonClick: (Int) -> Unit) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
+class ButtonAdapter(
+    private val buttonActions: List<ButtonAction>, private val onButtonClick: (Int) -> Unit,
+    private val onButtonMarkerClick: (Int) -> Unit
+) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_button, parent, false)
@@ -32,8 +35,10 @@ class ButtonAdapter(private val buttonActions: List<ButtonAction>, private val o
             button.text = action.getName()
             button.setOnClickListener {
                 onButtonClick(position)
+                onButtonMarkerClick(position)
                 button.isSelected = !button.isSelected
                 updateButtonBackground(button)
+
 //                action.performAction()
 //                // Perform action based on the button clicked
 //                when (action) {
