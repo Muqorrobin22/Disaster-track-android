@@ -156,6 +156,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMarkerClick(p0: Marker) = false
 
     private fun getReportResponseByTime() {
+        val emptyResultTextView : TextView = findViewById(R.id.no_result)
+        val emptyResultImageView : ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "2020-12-04T00:00:00+0700",
             "2020-12-06T05:00:00+0700"
@@ -171,8 +173,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
-                        reportAdapter = ReportAdapter(geometries)
-                        recyclerViewReport.adapter = reportAdapter
+                        if(geometries.isNullOrEmpty()) {
+                            emptyResultTextView.visibility = View.VISIBLE
+                            emptyResultImageView.visibility = View.VISIBLE
+                            recyclerViewReport.visibility = View.GONE
+                        } else {
+                            emptyResultTextView.visibility = View.GONE
+                            emptyResultImageView.visibility = View.GONE
+                            recyclerViewReport.visibility = View.VISIBLE
+                            reportAdapter = ReportAdapter(geometries)
+                            recyclerViewReport.adapter = reportAdapter
+                        }
+
+//                        reportAdapter = ReportAdapter(geometries)
+//                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
