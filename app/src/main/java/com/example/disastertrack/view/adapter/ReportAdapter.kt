@@ -11,7 +11,10 @@ import com.example.disastertrack.model.data.Geometry
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
 
-class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+class ReportAdapter(
+    private val reports: List<Geometry>,
+    private val onReportItemClick: (Geometry) -> Unit
+) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -38,16 +41,20 @@ class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<
         }
 
         // Add any other data you want to display with the image
-        if(titleText == null || titleText.isEmpty()) {
+        if (titleText == null || titleText.isEmpty()) {
             holder.titleItem.text = "Judul Tidak Tersedia"
         } else {
             holder.titleItem.text = titleText
         }
 
-        if(descText == null || descText.isEmpty()) {
+        if (descText == null || descText.isEmpty()) {
             holder.descriptionItem.text = "Deskripsi tidak tersedia"
         } else {
             holder.descriptionItem.text = descText
+        }
+
+        holder.itemView.setOnClickListener {
+            onReportItemClick(report)
         }
     }
 
@@ -55,8 +62,8 @@ class ReportAdapter(private val reports: List<Geometry>) : RecyclerView.Adapter<
 
     class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
-        val titleItem : TextView = itemView.findViewById(R.id.title_item)
-        val descriptionItem : TextView = itemView.findViewById(R.id.desc_item)
+        val titleItem: TextView = itemView.findViewById(R.id.title_item)
+        val descriptionItem: TextView = itemView.findViewById(R.id.desc_item)
 
         // Add other views from the item layout here if needed
     }

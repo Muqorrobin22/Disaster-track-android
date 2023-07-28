@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
+import com.example.disastertrack.model.data.Geometry
 import com.example.disastertrack.model.data.ReportsData
 import com.example.disastertrack.model.implement.*
 import com.example.disastertrack.model.service.ReportApiService
@@ -205,7 +206,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
-                            reportAdapter = ReportAdapter(geometries)
+                            reportAdapter = ReportAdapter(geometries, onReportItemClick = { position -> onReportItemClick(position)})
                             recyclerViewReport.adapter = reportAdapter
                         }
 
@@ -253,7 +254,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
-                            reportAdapter = ReportAdapter(geometries)
+                            reportAdapter = ReportAdapter(geometries, onReportItemClick = {position -> onReportItemClick(position)})
                             recyclerViewReport.adapter = reportAdapter
 
                             val mapBuilder = LatLngBounds.Builder()
@@ -293,6 +294,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+    }
+
+    private fun onReportItemClick(report: Geometry) {
+        // Handle the click event for a specific report item here
+        val latLng = LatLng(report.coordinates[1], report.coordinates[0])
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
     }
 
     private fun onButtonClick(position: Int) {
