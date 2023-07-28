@@ -1,5 +1,6 @@
 package com.example.disastertrack.view.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ class ButtonAdapter(
     private val buttonActions: List<ButtonAction>, private val onButtonClick: (Int) -> Unit,
     private val onButtonMarkerClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ButtonAdapter.ButtonViewHolder>() {
+
+    private var activeButtonPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_button, parent, false)
@@ -33,11 +36,22 @@ class ButtonAdapter(
 
         fun bindButton(action: ButtonAction, position: Int) {
             button.text = action.getName()
+            button.isSelected = position == activeButtonPosition
+            updateButtonBackground(button)
             button.setOnClickListener {
-                onButtonClick(position)
-                onButtonMarkerClick(position)
-                button.isSelected = !button.isSelected
-                updateButtonBackground(button)
+//                onButtonClick(position)
+//                onButtonMarkerClick(position)
+                if(position != activeButtonPosition) {
+                    val previousActivePosition = activeButtonPosition
+                    activeButtonPosition = position
+                    notifyItemChanged(previousActivePosition)
+                    notifyItemChanged(activeButtonPosition)
+
+                    onButtonClick(position)
+                    onButtonMarkerClick(position)
+                }
+//                button.isSelected = !button.isSelected
+//                updateButtonBackground(button)
 
 //                action.performAction()
 //                // Perform action based on the button clicked
@@ -56,8 +70,13 @@ class ButtonAdapter(
             val activeBackground = R.drawable.button_background_active
             val inactiveBackground = R.drawable.button_background_inactive
 
+            val activeTextColor = Color.WHITE
+            val inactiveTextColor = Color.BLACK
+
             val backgroundResource = if (button.isSelected) activeBackground else inactiveBackground
+            val textResources = if (button.isSelected) activeTextColor else inactiveTextColor
             button.setBackgroundResource(backgroundResource)
+            button.setTextColor(textResources)
         }
 
         private fun performAction1() {
