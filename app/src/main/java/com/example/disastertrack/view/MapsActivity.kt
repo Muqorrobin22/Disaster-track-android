@@ -164,7 +164,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun placeMarkerOnMapDisaster(currentLatLong: LatLng): Marker? {
         val markerOptions = MarkerOptions().position(currentLatLong)
         Log.d("MainMap", "lat long : ${currentLatLong}")
-        markerOptions.title("Disaster Location") // You can set a title for the marker here
+        markerOptions.title("Lokasi : ${currentLatLong}") // You can set a title for the marker here
         return mMap.addMarker(markerOptions)
     }
 
