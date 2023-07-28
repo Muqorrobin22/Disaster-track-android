@@ -30,6 +30,7 @@ import com.example.disastertrack.view.adapter.ButtonAdapter
 import com.example.disastertrack.view.adapter.ReportAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import retrofit2.*
@@ -39,6 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private val disasterMarkers: MutableList<Marker> = mutableListOf()
 
     // Adding this for current location
     private lateinit var lastLocation: Location
@@ -153,6 +156,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.addMarker(markerOptions)
     }
 
+    private fun placeMarkerOnMapDisaster(currentLatLong: LatLng): Marker? {
+        val markerOptions = MarkerOptions().position(currentLatLong)
+        Log.d("MainMap", "lat long : ${currentLatLong}")
+        markerOptions.title("Disaster Location") // You can set a title for the marker here
+        return mMap.addMarker(markerOptions)
+    }
+
     override fun onMarkerClick(p0: Marker) = false
 
     private fun getReportResponseByTime() {
@@ -216,17 +226,43 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
 
+
+                        clearDisasterMarkers()
                         if(geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
                             recyclerViewReport.visibility = View.GONE
+
+                            // Clear existing markers before adding new ones
+//                            mMap.clear()
                         } else {
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
                             reportAdapter = ReportAdapter(geometries)
                             recyclerViewReport.adapter = reportAdapter
+
+                            val mapBuilder = LatLngBounds.Builder()
+                            for (geometry in geometries) {
+                                val latLng = LatLng(geometry.coordinates[1], geometry.coordinates[0])
+                                var marker = placeMarkerOnMapDisaster(latLng)!!
+                                disasterMarkers.add(marker)
+                                mapBuilder.include(latLng)
+                            }
+                            // Adjust the camera to show all markers on the map
+                            val bounds = mapBuilder.build()
+                            val padding = resources.getDimensionPixelSize(R.dimen.map_padding)
+                            val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+                            mMap.moveCamera(cameraUpdate)
+
+//                            if (disasterMarkers.isNotEmpty()) {
+//                                val firstMarker = disasterMarkers[0]
+//                                Log.d("MainMap", "${firstMarker}")
+//                                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstMarker.position, 12f)
+//                                mMap.moveCamera(cameraUpdate)
+//                            }
                         }
+
 
 //                        reportAdapter = ReportAdapter(geometries)
 //                        recyclerViewReport.adapter = reportAdapter
@@ -257,6 +293,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             is ActionBeranginImpl -> getReportsByDisaster(DisasterType.BERANGIN.url)
         }
     }
+
+    private fun clearDisasterMarkers() {
+        for (marker in disasterMarkers) {
+            marker.remove()
+        }
+        disasterMarkers.clear()
+    }
+
+
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1
