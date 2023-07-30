@@ -90,7 +90,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         // Hide Action Bar
-        supportActionBar?.hide()
+//        supportActionBar?.hide()
 
 
         // report bencana

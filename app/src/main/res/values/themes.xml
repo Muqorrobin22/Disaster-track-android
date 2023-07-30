@@ -13,12 +13,12 @@
 <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
         
-        <item name="android:navigationBarColor">
-            @android:color/transparent
-        </item>
-        <item name="android:statusBarColor">
-            @android:color/transparent
-        </item>
+<!--        <item name="android:navigationBarColor">-->
+<!--            @android:color/transparent-->
+<!--        </item>-->
+<!--        <item name="android:statusBarColor">-->
+<!--            @android:color/transparent-->
+<!--        </item>-->
         <!-- Optional: set the status bar light and content dark. -->
 <!--        <item name="android:windowLightStatusBar">-->
 <!--            true-->
