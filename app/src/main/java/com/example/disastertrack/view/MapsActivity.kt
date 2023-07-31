@@ -92,6 +92,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // Hide Action Bar
 //        supportActionBar?.hide()
 
+//        setSupportActionBar(findViewById(R.id.toolbar_custom))
+
 
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
