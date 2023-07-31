@@ -18,17 +18,21 @@
             android:id="@+id/toolbar_custom"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="15dp"
             android:padding="5dp"
             app:popupTheme="@style/Theme.NavigationDrawer.PopupOverlay">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="24sp"
-                app:layout_anchor="@+id/appBarLayout"
-                app:layout_anchorGravity="center" />
+            <EditText
+                android:paddingStart="20dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Cari Lokasi"
+                android:background="@drawable/search_shape"
+                android:padding="5dp"
+                android:textSize="14sp"/>
 
         </androidx.appcompat.widget.Toolbar>
 
