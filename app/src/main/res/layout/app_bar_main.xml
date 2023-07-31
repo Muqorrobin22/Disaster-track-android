@@ -11,13 +11,13 @@
         android:id="@+id/appBarLayout"
         style="@style/Theme.NavigationDrawer.AppBarOverlay"
         android:layout_width="match_parent"
+        android:background="@android:color/transparent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_custom"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
             android:padding="5dp"
             app:popupTheme="@style/Theme.NavigationDrawer.PopupOverlay">
 
