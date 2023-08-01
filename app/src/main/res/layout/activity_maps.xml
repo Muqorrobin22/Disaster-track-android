@@ -21,6 +21,19 @@
             android:layout_height="wrap_content" />
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabGetCurrentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_current_location"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
+        android:layout_marginBottom="200dp"
+        android:layout_marginEnd="30dp"
+        app:layout_anchor="@id/map" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_buttons_disaster"
         android:layout_width="wrap_content"
@@ -35,6 +48,8 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,6 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"
+        android:elevation="6dp"
         tools:layout_editor_absoluteY="677dp">
 
         <FrameLayout
@@ -49,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rounded"
+            android:elevation="6dp"
             android:paddingLeft="20dp"
             app:enableEdgeToEdge="true"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -97,6 +114,8 @@
                 android:layout_marginTop="70dp">
 
             </androidx.recyclerview.widget.RecyclerView>
+
+
         </FrameLayout>
 
 
