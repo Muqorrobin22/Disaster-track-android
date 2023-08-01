@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -79,6 +80,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        findViewById<FloatingActionButton>(R.id.fabGetCurrentLocation).setOnClickListener {
+            getCurrentLocation()
+        }
 
         // follow this code to get current location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -180,6 +185,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val marker = disasterMarkers[position]
             // Do whatever you want with the marker (e.g., animate the camera to it)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 15f))
+        }
+    }
+
+    private fun getCurrentLocation() {
+
+        // Request and display the current location on the map
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Handle the case where permissions are not granted
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+            if (location != null) {
+                val currentLatLong = LatLng(location.latitude, location.longitude)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 12f))
+            }
         }
     }
 
