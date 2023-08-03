@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
@@ -35,6 +37,8 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputLayout
 import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -120,6 +124,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         recyclerViewButton.adapter = adapter
         recyclerViewButton.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
+
+        val selectAdapter = ArrayAdapter(this, R.layout.list_item_province, items)
+        val exposedDropdownLayout: TextInputLayout = findViewById(R.id.choose_province_menu)
+        val exposedDrowdown : AutoCompleteTextView = findViewById(R.id.choose_provinc_menu_dropdown)
+
+        exposedDrowdown.setAdapter(selectAdapter)
+        exposedDropdownLayout.setOnClickListener {
+
+        }
+
 
     }
 
