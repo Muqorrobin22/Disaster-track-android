@@ -332,7 +332,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             getString(R.string.kalimantan_timur) -> selectedProvince = "ID-KI"
             getString(R.string.nusa_tenggara_timur) -> selectedProvince = "ID-NT"
             getString(R.string.gorontalo) -> selectedProvince = "ID-GO"
-            getString(R.string.jakarta) -> selectedProvince ="ID-JK"
+            getString(R.string.jakarta) -> selectedProvince = "ID-JK"
             getString(R.string.jambi) -> selectedProvince = "ID-JA"
             getString(R.string.lampung) -> selectedProvince = "ID-LA"
             getString(R.string.maluku) -> selectedProvince = "ID-MA"
@@ -396,6 +396,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+
+        findViewById<TextView>(R.id.text_filter).text = "Provinsi: $province"
+        findViewById<TextView>(R.id.text_filter).visibility = View.VISIBLE
     }
 
     private fun getReportsByDisaster(disasterType: String) {

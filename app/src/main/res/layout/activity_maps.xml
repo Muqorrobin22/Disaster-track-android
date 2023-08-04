@@ -80,19 +80,27 @@
                 android:src="@drawable/baseline_remove_24" />
 
             <TextView
+                android:id="@+id/title_informasi_berita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="30dp"
                 android:text="Informasi Berita Terkini"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:textSize="15sp"/>
 
             <ImageView
                 android:id="@+id/no_result_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center|top"
-                android:layout_marginTop="115dp"
+                android:layout_marginTop="135dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/no_results_found" />
 
@@ -101,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
-                android:layout_marginTop="85dp"
+                android:layout_marginTop="105dp"
                 android:gravity="center"
                 android:text="OOOPS data kosong"
                 android:textSize="18sp" />
