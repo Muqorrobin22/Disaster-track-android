@@ -21,4 +21,9 @@ interface ReportApiService {
     fun getReportByDisaster(
         @Query("disaster") disaster: String
     ) : Call<ReportsData>
+
+    @GET("reports")
+    fun getReportByProvinceLocation(
+        @Query("admin") province: String
+    ) : Call<ReportsData>
 }

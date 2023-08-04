@@ -125,15 +125,53 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         recyclerViewButton.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
+        val items: List<String> =
+            listOf(
+                getString(R.string.aceh),
+                getString(R.string.bali),
+                getString(R.string.bangka_belitung),
+                getString(R.string.banten),
+                getString(R.string.bengkulu),
+                getString(R.string.jawa_tengah),
+                getString(R.string.kalimantan_tengah),
+                getString(R.string.sulawesi_tengah),
+                getString(R.string.jawa_timur),
+                getString(R.string.kalimantan_timur),
+                getString(R.string.nusa_tenggara_timur),
+                getString(R.string.gorontalo),
+                getString(R.string.jakarta),
+                getString(R.string.jambi),
+                getString(R.string.lampung),
+                getString(R.string.maluku),
+                getString(R.string.kalimantan_utara),
+                getString(R.string.maluku_utara),
+                getString(R.string.sulawesi_utara),
+                getString(R.string.sumatra_utara),
+                getString(R.string.papua),
+                getString(R.string.riau),
+                getString(R.string.kepulauan_riau),
+                getString(R.string.sulawesi_tenggara),
+                getString(R.string.kalimantan_selatan),
+                getString(R.string.sulawesi_selatan),
+                getString(R.string.sumatra_selatan),
+                getString(R.string.yogyakarta),
+                getString(R.string.jawa_barat),
+                getString(R.string.kalimantan_barat),
+                getString(R.string.nusa_tenggara_barat),
+                getString(R.string.papua_barat),
+                getString(R.string.sulawesi_barat),
+                getString(R.string.sumatra_barat)
+            )
 
         val selectAdapter = ArrayAdapter(this, R.layout.list_item_province, items)
         val exposedDropdownLayout: TextInputLayout = findViewById(R.id.choose_province_menu)
-        val exposedDrowdown : AutoCompleteTextView = findViewById(R.id.choose_provinc_menu_dropdown)
+        val exposedDrowdown: AutoCompleteTextView = findViewById(R.id.choose_provinc_menu_dropdown)
 
         exposedDrowdown.setAdapter(selectAdapter)
-        exposedDropdownLayout.setOnClickListener {
-
+        exposedDrowdown.setOnItemClickListener { _, _, position, _ ->
+            val selectedItem = selectAdapter.getItem(position) ?: return@setOnItemClickListener
+            Log.d("MainChooseProvince", selectedItem)
+            getReportsByProvince(selectedItem)
         }
 
 
@@ -253,7 +291,94 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
-                            reportAdapter = ReportAdapter(geometries, onReportItemClick = { position -> onReportItemClick(position)})
+                            reportAdapter = ReportAdapter(
+                                geometries,
+                                onReportItemClick = { position -> onReportItemClick(position) })
+                            recyclerViewReport.adapter = reportAdapter
+                        }
+
+//                        reportAdapter = ReportAdapter(geometries)
+//                        recyclerViewReport.adapter = reportAdapter
+                    }
+
+                    Log.d("MainActivity", "response : ${response.body()}")
+                } else {
+                    Log.e(
+                        "MainActivity", "Failed to get search results\n${
+                            response.errorBody()?.string().orEmpty()
+                        }"
+                    )
+                }
+            }
+        })
+    }
+
+    private fun getReportsByProvince(province: String) {
+        val emptyResultTextView: TextView = findViewById(R.id.no_result)
+        val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+
+        lateinit var selectedProvince: String
+
+        when (province) {
+            getString(R.string.aceh) -> selectedProvince = "ID-AC"
+            getString(R.string.bali) -> selectedProvince = "ID-BA"
+            getString(R.string.bangka_belitung) -> selectedProvince = "ID-BB"
+            getString(R.string.banten) -> selectedProvince = "ID-BT"
+            getString(R.string.bengkulu) -> selectedProvince = "ID-BE"
+            getString(R.string.jawa_tengah) -> selectedProvince = "ID-JT"
+            getString(R.string.kalimantan_tengah) -> selectedProvince = "ID-KT"
+            getString(R.string.sulawesi_tengah) -> selectedProvince = "ID-ST"
+            getString(R.string.jawa_timur) -> selectedProvince = "ID-JI"
+            getString(R.string.kalimantan_timur) -> selectedProvince = "ID-KI"
+            getString(R.string.nusa_tenggara_timur) -> selectedProvince = "ID-NT"
+            getString(R.string.gorontalo) -> selectedProvince = "ID-GO"
+            getString(R.string.jakarta) -> selectedProvince ="ID-JK"
+            getString(R.string.jambi) -> selectedProvince = "ID-JA"
+            getString(R.string.lampung) -> selectedProvince = "ID-LA"
+            getString(R.string.maluku) -> selectedProvince = "ID-MA"
+            getString(R.string.kalimantan_utara) -> selectedProvince = "ID-KU"
+            getString(R.string.maluku_utara) -> selectedProvince = "ID-MU"
+            getString(R.string.sulawesi_utara) -> selectedProvince = "ID-SA"
+            getString(R.string.sumatra_utara) -> selectedProvince = "ID-SU"
+            getString(R.string.papua) -> selectedProvince = "ID-PA"
+            getString(R.string.riau) -> selectedProvince = "ID-RI"
+            getString(R.string.kepulauan_riau) -> selectedProvince = "ID-KR"
+            getString(R.string.sulawesi_tenggara) -> selectedProvince = "ID-SG"
+            getString(R.string.kalimantan_selatan) -> selectedProvince = "ID-KS"
+            getString(R.string.sulawesi_selatan) -> selectedProvince = "ID-SN"
+            getString(R.string.sumatra_selatan) -> selectedProvince = "ID-SS"
+            getString(R.string.yogyakarta) -> selectedProvince = "ID-YO"
+            getString(R.string.jawa_barat) -> selectedProvince = "ID-JB"
+            getString(R.string.kalimantan_barat) -> selectedProvince = "ID-KB"
+            getString(R.string.nusa_tenggara_barat) -> selectedProvince = "ID-NB"
+            getString(R.string.papua_barat) -> selectedProvince = "ID-PB"
+            getString(R.string.sulawesi_barat) -> selectedProvince = "ID-SR"
+            getString(R.string.sumatra_barat) -> selectedProvince = "ID-SB"
+        }
+
+        val call = reportApiServiceImpl.getReportByProvinceLocation(selectedProvince)
+        call.enqueue(object : Callback<ReportsData> {
+            override fun onFailure(call: Call<ReportsData>, t: Throwable) {
+                Log.e("MainActivity", "Failed to get search result", t)
+            }
+
+            override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    if (apiResponse != null) {
+                        val geometries = apiResponse.result.objects.output.geometries
+
+                        if (geometries.isNullOrEmpty()) {
+                            emptyResultTextView.visibility = View.VISIBLE
+                            emptyResultImageView.visibility = View.VISIBLE
+                            recyclerViewReport.visibility = View.GONE
+                        } else {
+                            emptyResultTextView.visibility = View.GONE
+                            emptyResultImageView.visibility = View.GONE
+                            recyclerViewReport.visibility = View.VISIBLE
+                            reportAdapter = ReportAdapter(
+                                geometries,
+                                onReportItemClick = { position -> onReportItemClick(position) })
                             recyclerViewReport.adapter = reportAdapter
                         }
 
@@ -301,7 +426,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
-                            reportAdapter = ReportAdapter(geometries, onReportItemClick = {position -> onReportItemClick(position)})
+                            reportAdapter = ReportAdapter(
+                                geometries,
+                                onReportItemClick = { position -> onReportItemClick(position) })
                             recyclerViewReport.adapter = reportAdapter
 
                             val mapBuilder = LatLngBounds.Builder()
