@@ -491,8 +491,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         })
 
         filterInformation = findViewById(R.id.text_filter)
+        var disasterTypeInfo = when (disasterType) {
+            DisasterType.BANJIR.url -> "Banjir"
+            DisasterType.GEMPA.url -> "Gempa Bumi"
+            DisasterType.KABUT.url -> "Kabut"
+            DisasterType.GUNUNGMELETUS.url -> "Gunung Meletus"
+            DisasterType.KEBAKARAN.url -> "Kebakaran"
+            DisasterType.BERANGIN.url -> "Berangin"
+            else -> "Tidak ada Filter Bencana"
+        }
 
-        filterInformation.text = "Disaster: $disasterType"
+        filterInformation.text = "Disaster: $disasterTypeInfo"
         filterInformation.visibility = View.VISIBLE
     }
 
