@@ -56,6 +56,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter: ReportAdapter
 
+    private lateinit var filterInformation: TextView
+
     private val buttonActions = listOf(
         ActionBanjirImpl(),
         ActionKabutImpl(),
@@ -397,8 +399,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         })
 
-        findViewById<TextView>(R.id.text_filter).text = "Provinsi: $province"
-        findViewById<TextView>(R.id.text_filter).visibility = View.VISIBLE
+        filterInformation = findViewById(R.id.text_filter)
+
+        filterInformation.text = "Provinsi: $province"
+        filterInformation.visibility = View.VISIBLE
     }
 
     private fun getReportsByDisaster(disasterType: String) {
@@ -471,6 +475,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+
+        filterInformation = findViewById(R.id.text_filter)
+
+        filterInformation.text = "Disaster: $disasterType"
+        filterInformation.visibility = View.VISIBLE
     }
 
     private fun onReportItemClick(report: Geometry) {
