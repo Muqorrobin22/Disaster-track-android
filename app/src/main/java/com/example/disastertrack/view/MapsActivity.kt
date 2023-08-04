@@ -403,6 +403,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         filterInformation.text = "Provinsi: $province"
         filterInformation.visibility = View.VISIBLE
+
+        clearDisasterMarkers()
+
+        val adapter = ButtonAdapter(
+            buttonActions,
+            onButtonClick = { position -> onButtonClick(position) },
+            onButtonMarkerClick = { position -> onButtonMarkerClick(position) })
+        recyclerViewButton.adapter = adapter
+        recyclerViewButton.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        // Clear the button state and background when a new province is selected
+        adapter.resetButtonState()
+
+
     }
 
     private fun getReportsByDisaster(disasterType: String) {
@@ -500,6 +514,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             is ActionGempaImpl -> getReportsByDisaster(DisasterType.GEMPA.url)
             is ActionBeranginImpl -> getReportsByDisaster(DisasterType.BERANGIN.url)
         }
+
     }
 
     private fun clearDisasterMarkers() {

@@ -1,6 +1,7 @@
 package com.example.disastertrack.view.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ class ButtonAdapter(
         private val button: Button = itemView.findViewById(R.id.button_disaster)
 
         fun bindButton(action: ButtonAction, position: Int) {
+            Log.d("MainButtonSelect", "position : $position")
             button.text = action.getName()
             button.isSelected = position == activeButtonPosition
             updateButtonBackground(button)
@@ -44,8 +46,12 @@ class ButtonAdapter(
                 if(position != activeButtonPosition) {
                     val previousActivePosition = activeButtonPosition
                     activeButtonPosition = position
-                    notifyItemChanged(previousActivePosition)
-                    notifyItemChanged(activeButtonPosition)
+
+                    notifyDataSetChanged()
+
+
+//                    notifyItemChanged(previousActivePosition)
+//                    notifyItemChanged(activeButtonPosition)
 
                     onButtonClick(position)
                     onButtonMarkerClick(position)
@@ -79,6 +85,7 @@ class ButtonAdapter(
             button.setTextColor(textResources)
         }
 
+
         private fun performAction1() {
             // Implement action 1 logic here
             Toast.makeText(itemView.context, "Action 1 clicked!", Toast.LENGTH_SHORT).show()
@@ -90,5 +97,13 @@ class ButtonAdapter(
             Toast.makeText(itemView.context, "Action 2 clicked!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun resetButtonState() {
+        val previousActivePosition = activeButtonPosition
+        activeButtonPosition = -1
+        notifyItemChanged(previousActivePosition)
+        notifyDataSetChanged()
+    }
+
 
 }
