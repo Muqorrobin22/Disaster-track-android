@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
@@ -36,11 +37,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -177,6 +181,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
 
+        // get date
+        val mPickDateButton = findViewById<FloatingActionButton>(R.id.fabGetDateByCalendar)
+//        val mShowSelectedDateText = findViewById<>()
+
+        val materialDateBuilder : MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
+
+        materialDateBuilder.setTitleText("SELECT A DATE")
+
+        val materialDatePicker = materialDateBuilder.build()
+
+        mPickDateButton.setOnClickListener { // getSupportFragmentManager() to
+            // interact with the fragments
+            // associated with the material design
+            // date picker tag is to get any error
+            // in logcat
+            Log.d("MainDate", "Opening..")
+            materialDatePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER")
+        }
+
+        materialDatePicker.addOnPositiveButtonClickListener {
+            val inputDateString: String = materialDatePicker.headerText
+            val inputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd")
+
+            val date = inputFormat.parse(inputDateString)
+            val outputDateString = outputFormat.format(date)
+
+            Log.d("MainDate", "${outputDateString}")
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
