@@ -205,8 +205,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 //            val date = inputFormat.parse(inputDateString)
 //            val outputDateString = outputFormat.format(date)
 
-            Log.d("MainDate", "${materialDatePicker.headerText}")
+            var convertedDate = convertDateRange(materialDatePicker.headerText)
+
+            Log.d("MainDate", "${convertedDate}")
         }
+    }
+
+    fun convertDateRange(dateRange: String): String {
+        val dateParts = dateRange.split(" – ")
+        val startDate = parseDate(dateParts[0])
+        val endDate = parseEndDate(dateParts[1])
+
+        val convertedStartDate = SimpleDateFormat("yyyy-MM-dd").format(startDate)
+        val convertedEndDate = SimpleDateFormat("yyyy-MM-dd").format(endDate)
+
+        return "$convertedStartDate – $convertedEndDate"
+    }
+
+    fun parseDate(dateString: String): Date {
+        val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
+        return SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
+    }
+
+    fun parseEndDate(endDateString: String): Date {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val dateFormat = if (endDateString.contains(",")) "MMM d, yyyy" else "MMM d"
+
+
+
+        return if ( endDateString.contains(",")) {
+            SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(endDateString)
+        } else {
+            val dateWithoutYear = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(endDateString)
+            val calendar = Calendar.getInstance()
+            calendar.time = dateWithoutYear
+            calendar.set(Calendar.YEAR, currentYear)
+
+            calendar.time
+        }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
