@@ -206,8 +206,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 //            val outputDateString = outputFormat.format(date)
 
             var convertedDate = convertDateRange(materialDatePicker.headerText)
+            val getDateByUser = convertedDate.split("/")
 
-            Log.d("MainDate", "${convertedDate}")
+
+            Log.d("MainDate", "${getDateByUser[0]} - ${getDateByUser[1]}")
+            getReportResponseByPickedDate(getDateByUser[0], getDateByUser[1])
+
         }
     }
 
@@ -241,7 +245,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val convertedStartDate = SimpleDateFormat("yyyy-MM-dd").format(startDate)
         val convertedEndDate = SimpleDateFormat("yyyy-MM-dd").format(endDate)
 
-        return "$convertedStartDate – $convertedEndDate"
+        return "$convertedStartDate/$convertedEndDate"
     }
 
     fun parseDate(dateString: String): Date {
@@ -432,12 +436,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         })
     }
 
-    private fun getReportResponseByPickedDate() {
+    private fun getReportResponseByPickedDate(startDate: String, endDate: String) {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
-            "2020-12-04T00:00:00+0700",
-            "2020-12-06T05:00:00+0700"
+            "${startDate}T00:00:00+0700",
+            "${endDate}T05:00:00+0700"
         )
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -478,6 +482,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+
+        filterInformation = findViewById(R.id.text_filter)
+
+        filterInformation.text = "Tanggal: $startDate - $endDate"
+        filterInformation.visibility = View.VISIBLE
     }
 
     private fun getReportsByProvince(province: String) {
