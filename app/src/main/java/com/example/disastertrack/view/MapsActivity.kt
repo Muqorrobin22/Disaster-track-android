@@ -3,26 +3,18 @@ package com.example.disastertrack.view
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.example.disastertrack.databinding.ActivityMapsBinding
 import com.example.disastertrack.model.data.Geometry
 import com.example.disastertrack.model.data.ReportsData
@@ -34,12 +26,17 @@ import com.example.disastertrack.view.adapter.ButtonAdapter
 import com.example.disastertrack.view.adapter.ReportAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -185,7 +182,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val mPickDateButton = findViewById<FloatingActionButton>(R.id.fabGetDateByCalendar)
 //        val mShowSelectedDateText = findViewById<>()
 
-        val materialDateBuilder : MaterialDatePicker.Builder<*> = MaterialDatePicker.Builder.datePicker()
+        val materialDateBuilder : MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> = MaterialDatePicker.Builder.dateRangePicker()
 
         materialDateBuilder.setTitleText("SELECT A DATE")
 
@@ -201,14 +198,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         materialDatePicker.addOnPositiveButtonClickListener {
-            val inputDateString: String = materialDatePicker.headerText
-            val inputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
-            val outputFormat = SimpleDateFormat("yyyy-MM-dd")
+//            val inputDateString: String = materialDatePicker.headerText
+//            val inputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
+//            val outputFormat = SimpleDateFormat("yyyy-MM-dd")
+//
+//            val date = inputFormat.parse(inputDateString)
+//            val outputDateString = outputFormat.format(date)
 
-            val date = inputFormat.parse(inputDateString)
-            val outputDateString = outputFormat.format(date)
-
-            Log.d("MainDate", "${outputDateString}")
+            Log.d("MainDate", "${materialDatePicker.headerText}")
         }
     }
 
@@ -301,6 +298,54 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun getReportResponseByTime() {
+        val emptyResultTextView: TextView = findViewById(R.id.no_result)
+        val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+        val call = reportApiServiceImpl.getReportByYearStartToEnd(
+            "2020-12-04T00:00:00+0700",
+            "2020-12-06T05:00:00+0700"
+        )
+        call.enqueue(object : Callback<ReportsData> {
+            override fun onFailure(call: Call<ReportsData>, t: Throwable) {
+                Log.e("MainActivity", "Failed to get search result", t)
+            }
+
+            override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    if (apiResponse != null) {
+                        val geometries = apiResponse.result.objects.output.geometries
+
+                        if (geometries.isNullOrEmpty()) {
+                            emptyResultTextView.visibility = View.VISIBLE
+                            emptyResultImageView.visibility = View.VISIBLE
+                            recyclerViewReport.visibility = View.GONE
+                        } else {
+                            emptyResultTextView.visibility = View.GONE
+                            emptyResultImageView.visibility = View.GONE
+                            recyclerViewReport.visibility = View.VISIBLE
+                            reportAdapter = ReportAdapter(
+                                geometries,
+                                onReportItemClick = { position -> onReportItemClick(position) })
+                            recyclerViewReport.adapter = reportAdapter
+                        }
+
+//                        reportAdapter = ReportAdapter(geometries)
+//                        recyclerViewReport.adapter = reportAdapter
+                    }
+
+                    Log.d("MainActivity", "response : ${response.body()}")
+                } else {
+                    Log.e(
+                        "MainActivity", "Failed to get search results\n${
+                            response.errorBody()?.string().orEmpty()
+                        }"
+                    )
+                }
+            }
+        })
+    }
+
+    private fun getReportResponseByPickedDate() {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
