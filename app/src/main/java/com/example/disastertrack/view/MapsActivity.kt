@@ -223,8 +223,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     fun parseDate(dateString: String): Date {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
-        return SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
+//         SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
+
+        return if ( dateString.contains(",")) {
+            SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
+        } else {
+            val dateWithoutYear = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
+            val calendar = Calendar.getInstance()
+            calendar.time = dateWithoutYear
+            calendar.set(Calendar.YEAR, currentYear)
+
+            calendar.time
+        }
     }
 
     fun parseEndDate(endDateString: String): Date {
