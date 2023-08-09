@@ -496,7 +496,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         filterInformation = findViewById(R.id.text_filter)
 
-        filterInformation.text = "Tanggal: $startDate - $endDate"
+        val list_of_date = listOf<String>(startDate, endDate)
+        val list_outputted_date : MutableList<String> = mutableListOf()
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val outputFormat = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+
+        for (date in list_of_date) {
+            val inputDate = inputFormat.parse(date)
+            val outputDateStr = outputFormat.format(inputDate)
+            list_outputted_date.add(outputDateStr)
+        }
+
+
+
+        filterInformation.text = "Tanggal: ${list_outputted_date[0]} - ${list_outputted_date[1]}"
         filterInformation.visibility = View.VISIBLE
     }
 
