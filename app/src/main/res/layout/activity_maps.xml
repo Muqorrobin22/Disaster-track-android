@@ -127,6 +127,17 @@
                 android:text="OOOPS data kosong"
                 android:textSize="18sp" />
 
+            <TextView
+                android:id="@+id/no_boundaries_date"
+                android:text="Pastikan tidak melebihi tanggal sekarang\natau tidak lebih dari 207 Hari"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="235dp"
+                android:gravity="center"
+                android:textSize="15sp" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_report"
                 android:layout_width="match_parent"

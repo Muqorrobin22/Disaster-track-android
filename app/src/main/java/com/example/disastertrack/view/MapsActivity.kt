@@ -439,6 +439,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun getReportResponseByPickedDate(startDate: String, endDate: String) {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+        val textBoundariesDate : TextView = findViewById(R.id.no_boundaries_date)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "${startDate}T00:00:00+0700",
             "${endDate}T05:00:00+0700"
@@ -452,24 +453,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     if (apiResponse != null) {
-                        val geometries = apiResponse.result.objects.output.geometries
+                        if(apiResponse.result != null) {
+                            val geometries = apiResponse.result.objects.output.geometries
 
-                        if (geometries.isNullOrEmpty()) {
-                            emptyResultTextView.visibility = View.VISIBLE
-                            emptyResultImageView.visibility = View.VISIBLE
-                            recyclerViewReport.visibility = View.GONE
-                        } else {
-                            emptyResultTextView.visibility = View.GONE
-                            emptyResultImageView.visibility = View.GONE
-                            recyclerViewReport.visibility = View.VISIBLE
-                            reportAdapter = ReportAdapter(
-                                geometries,
-                                onReportItemClick = { position -> onReportItemClick(position) })
-                            recyclerViewReport.adapter = reportAdapter
-                        }
+                            if (geometries.isNullOrEmpty()) {
+                                emptyResultTextView.visibility = View.VISIBLE
+                                emptyResultImageView.visibility = View.VISIBLE
+                                recyclerViewReport.visibility = View.GONE
+                            } else {
+                                emptyResultTextView.visibility = View.GONE
+                                emptyResultImageView.visibility = View.GONE
+                                recyclerViewReport.visibility = View.VISIBLE
+                                reportAdapter = ReportAdapter(
+                                    geometries,
+                                    onReportItemClick = { position -> onReportItemClick(position) })
+                                recyclerViewReport.adapter = reportAdapter
+                            }
 
 //                        reportAdapter = ReportAdapter(geometries)
 //                        recyclerViewReport.adapter = reportAdapter
+                        } else {
+                            emptyResultTextView.visibility = View.VISIBLE
+                            emptyResultImageView.visibility = View.VISIBLE
+
+                            // ini bug bakal dibenerin saat refactoring
+                            textBoundariesDate.visibility = View.VISIBLE
+                            recyclerViewReport.visibility = View.GONE
+                        }
+
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
