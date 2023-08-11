@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
-        getReportResponseByTime()
+        getReportResponseByCurrentDate()
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
@@ -281,14 +281,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    private fun getReportResponseByTime() {
+    private fun getReportResponseByCurrentDate() {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         textBoundariesDate = findViewById(R.id.no_boundaries_date)
-        val call = reportApiServiceImpl.getReportByYearStartToEnd(
-            "2020-12-04T00:00:00+0700",
-            "2020-12-06T05:00:00+0700"
-        )
+        val call = reportApiServiceImpl.getReportByCurrentDate()
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
                 Log.e("MainActivity", "Failed to get search result", t)

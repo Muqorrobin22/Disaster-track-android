@@ -6,6 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ReportApiService {
+
+    @GET("reports")
+    fun getReportByCurrentDate() : Call<ReportsData>
     @GET("reports/archive")
     fun getReportByYearStartToEnd(
         @Query("start") start: String,
