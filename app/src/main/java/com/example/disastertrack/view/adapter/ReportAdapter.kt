@@ -32,15 +32,14 @@ class ReportAdapter(
         if (!imageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(imageUrl)
-                .placeholder(R.drawable.placeholder_image) // You can use a placeholder image here
-                .error(R.drawable.error_image) // You can use an error image here
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
                 .into(holder.imageView)
         } else {
             // Handle case where there's no image available or show a default image
             holder.imageView.setImageResource(R.drawable.no_image)
         }
 
-        // Add any other data you want to display with the image
         if (titleText == null || titleText.isEmpty()) {
             holder.titleItem.text = "Judul Tidak Tersedia"
         } else {
@@ -65,7 +64,6 @@ class ReportAdapter(
         val titleItem: TextView = itemView.findViewById(R.id.title_item)
         val descriptionItem: TextView = itemView.findViewById(R.id.desc_item)
 
-        // Add other views from the item layout here if needed
     }
 
 }
