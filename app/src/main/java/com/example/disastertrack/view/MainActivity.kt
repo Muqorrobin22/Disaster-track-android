@@ -55,8 +55,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter: ReportAdapter
     private lateinit var filterInformation: TextView
+    private lateinit var textBoundariesDate : TextView
 
     private val disasterMarkers: MutableList<Marker> = mutableListOf()
+//    var textBoundariesDate : TextView = findViewById(R.id.no_boundaries_date)
 
     private val buttonActions = listOf(
         ActionBanjirImpl(),
@@ -282,6 +284,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun getReportResponseByTime() {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+        textBoundariesDate = findViewById(R.id.no_boundaries_date)
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "2020-12-04T00:00:00+0700",
             "2020-12-06T05:00:00+0700"
@@ -300,10 +303,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         if (geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.GONE
                         } else {
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
                             reportAdapter = ReportAdapter(
                                 geometries,
@@ -328,7 +333,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun getReportResponseByPickedDate(startDate: String, endDate: String) {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
-        val textBoundariesDate : TextView = findViewById(R.id.no_boundaries_date)
+        textBoundariesDate = findViewById(R.id.no_boundaries_date)
+
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "${startDate}T00:00:00+0700",
             "${endDate}T05:00:00+0700"
@@ -348,10 +354,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             if (geometries.isNullOrEmpty()) {
                                 emptyResultTextView.visibility = View.VISIBLE
                                 emptyResultImageView.visibility = View.VISIBLE
+                                textBoundariesDate.visibility = View.GONE
                                 recyclerViewReport.visibility = View.GONE
                             } else {
                                 emptyResultTextView.visibility = View.GONE
                                 emptyResultImageView.visibility = View.GONE
+                                textBoundariesDate.visibility = View.GONE
                                 recyclerViewReport.visibility = View.VISIBLE
                                 reportAdapter = ReportAdapter(
                                     geometries,
@@ -401,6 +409,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun getReportsByProvince(province: String) {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+        textBoundariesDate = findViewById(R.id.no_boundaries_date)
 
         lateinit var selectedProvince: String
 
@@ -456,10 +465,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         if (geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.GONE
                         } else {
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
                             reportAdapter = ReportAdapter(
                                 geometries,
@@ -503,6 +514,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun getReportsByDisaster(disasterType: String) {
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
+        textBoundariesDate = findViewById(R.id.no_boundaries_date)
         val call = reportApiServiceImpl.getReportByDisaster(disasterType)
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -520,11 +532,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         if (geometries.isNullOrEmpty()) {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.GONE
 
                         } else {
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
+                            textBoundariesDate.visibility = View.GONE
                             recyclerViewReport.visibility = View.VISIBLE
                             reportAdapter = ReportAdapter(
                                 geometries,
