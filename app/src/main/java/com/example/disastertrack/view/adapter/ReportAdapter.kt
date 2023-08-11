@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 import com.example.disastertrack.model.data.Geometry
+import com.example.disastertrack.utils.DisasterType
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
 
@@ -27,6 +28,7 @@ class ReportAdapter(
         val imageUrl = report.properties.image_url
         val titleText = report.properties.title
         val descText = report.properties.text
+        val tagDisaster = report.properties.disaster_type
 
         // Load the image into the ImageView using Picasso
         if (!imageUrl.isNullOrEmpty()) {
@@ -52,6 +54,21 @@ class ReportAdapter(
             holder.descriptionItem.text = descText
         }
 
+        if (tagDisaster == null || tagDisaster.isEmpty()) {
+            holder.tagDisasterType.text = "Unknown disaster"
+        } else {
+            var disasterTypeInfo = when (tagDisaster) {
+                DisasterType.BANJIR.url -> "Banjir"
+                DisasterType.GEMPA.url -> "Gempa Bumi"
+                DisasterType.KABUT.url -> "Kabut"
+                DisasterType.GUNUNGMELETUS.url -> "Gunung Meletus"
+                DisasterType.KEBAKARAN.url -> "Kebakaran"
+                DisasterType.BERANGIN.url -> "Berangin"
+                else -> "Unknown Disaster"
+            }
+            holder.tagDisasterType.text = disasterTypeInfo
+        }
+
         holder.itemView.setOnClickListener {
             onReportItemClick(report)
         }
@@ -63,7 +80,7 @@ class ReportAdapter(
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val titleItem: TextView = itemView.findViewById(R.id.title_item)
         val descriptionItem: TextView = itemView.findViewById(R.id.desc_item)
-
+        val tagDisasterType: TextView = itemView.findViewById(R.id.tag_disaster)
     }
 
 }

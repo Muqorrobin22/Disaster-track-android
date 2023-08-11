@@ -293,6 +293,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
             override fun onResponse(call: Call<ReportsData>, response: Response<ReportsData>) {
                 if (response.isSuccessful) {
+                    clearDisasterMarkers()
                     val apiResponse = response.body()
                     if (apiResponse != null) {
                         val geometries = apiResponse.result.objects.output.geometries
