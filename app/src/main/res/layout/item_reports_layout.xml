@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_tag_disaster"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="11sp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:paddingTop="5dp"
@@ -59,14 +59,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_tag_creation_date"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="11sp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_gravity="end|center"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="30dp"
         android:text="TextView" />
 
 
