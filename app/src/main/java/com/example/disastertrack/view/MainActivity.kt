@@ -22,6 +22,7 @@ import com.example.disastertrack.model.implement.*
 import com.example.disastertrack.model.service.ReportApiService
 import com.example.disastertrack.utils.BaseURL
 import com.example.disastertrack.utils.DisasterType
+import com.example.disastertrack.utils.ManagedDate
 import com.example.disastertrack.view.adapter.ButtonAdapter
 import com.example.disastertrack.view.adapter.ReportAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         materialDatePicker.addOnPositiveButtonClickListener {
 
-            var convertedDate = convertDateRange(materialDatePicker.headerText)
+            var convertedDate = ManagedDate().convertDateRange(materialDatePicker.headerText)
             val getDateByUser = convertedDate.split("/")
 
 
@@ -188,86 +189,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    fun containsTwoCommas(date: String): Int {
-        val parts = date.split(",")
-        return parts.size - 1
-    }
 
-    fun getLastYear(date: String): String {
-        val parts = date.split(", ", " – ")
-        return parts.last()
-    }
-
-    fun convertDateRange(dateRange: String): String {
-        val dateParts = dateRange.split(" – ")
-        lateinit var startDate: Date
-        lateinit var endDate : Date
-
-        if (containsTwoCommas(dateRange) == 1) {
-            Log.d("MainDate", "1 comma")
-            var getLastYear = getLastYear(dateRange)
-            startDate = parseStartDateWithSameYear(dateParts[0], getLastYear.toInt())
-            endDate = parseEndDate(dateParts[1])
-        } else {
-            startDate = parseDate(dateParts[0])
-            endDate = parseEndDate(dateParts[1])
-        }
-
-        val convertedStartDate = SimpleDateFormat("yyyy-MM-dd").format(startDate)
-        val convertedEndDate = SimpleDateFormat("yyyy-MM-dd").format(endDate)
-
-        return "$convertedStartDate/$convertedEndDate"
-    }
-
-    fun parseDate(dateString: String): Date {
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
-
-        return if ( dateString.contains(",")) {
-            SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
-        } else {
-            val dateWithoutYear = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
-            val calendar = Calendar.getInstance()
-            calendar.time = dateWithoutYear
-            calendar.set(Calendar.YEAR, currentYear)
-
-            calendar.time
-        }
-    }
-
-    fun parseStartDateWithSameYear(dateString: String, year : Int): Date {
-        val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
-
-        return if ( dateString.contains(",")) {
-            SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
-        } else {
-            val dateWithoutYear = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
-            val calendar = Calendar.getInstance()
-            calendar.time = dateWithoutYear
-            calendar.set(Calendar.YEAR, year)
-
-            calendar.time
-        }
-    }
-
-    fun parseEndDate(endDateString: String): Date {
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val dateFormat = if (endDateString.contains(",")) "MMM d, yyyy" else "MMM d"
-
-
-
-        return if ( endDateString.contains(",")) {
-            SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(endDateString)
-        } else {
-            val dateWithoutYear = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(endDateString)
-            val calendar = Calendar.getInstance()
-            calendar.time = dateWithoutYear
-            calendar.set(Calendar.YEAR, currentYear)
-
-            calendar.time
-        }
-
-    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
