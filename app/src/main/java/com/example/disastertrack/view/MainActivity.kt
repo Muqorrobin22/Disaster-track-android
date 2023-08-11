@@ -476,6 +476,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                                 geometries,
                                 onReportItemClick = { position -> onReportItemClick(position) })
                             recyclerViewReport.adapter = reportAdapter
+
+                            val mapBuilder = LatLngBounds.Builder()
+                            for (geometry in geometries) {
+                                val latLng =
+                                    LatLng(geometry.coordinates[1], geometry.coordinates[0])
+                                var marker = placeMarkerOnMapDisaster(latLng)!!
+                                disasterMarkers.add(marker)
+                                mapBuilder.include(latLng)
+                            }
+                            // Adjust the camera to show all markers on the map
+                            val bounds = mapBuilder.build()
+                            val padding = resources.getDimensionPixelSize(R.dimen.map_padding)
+                            val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+                            mMap.moveCamera(cameraUpdate)
                         }
 
                     }
