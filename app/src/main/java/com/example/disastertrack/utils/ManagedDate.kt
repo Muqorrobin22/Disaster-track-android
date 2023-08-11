@@ -2,6 +2,10 @@ package com.example.disastertrack.utils
 
 import android.util.Log
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ManagedDate {
@@ -84,5 +88,15 @@ class ManagedDate {
             calendar.time
         }
 
+    }
+
+    fun formatDateForCreationTag(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date)
     }
 }

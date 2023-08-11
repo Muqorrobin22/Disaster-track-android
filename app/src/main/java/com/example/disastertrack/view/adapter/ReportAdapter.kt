@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disastertrack.R
 import com.example.disastertrack.model.data.Geometry
 import com.example.disastertrack.utils.DisasterType
+import com.example.disastertrack.utils.ManagedDate
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
 
@@ -29,6 +30,7 @@ class ReportAdapter(
         val titleText = report.properties.title
         val descText = report.properties.text
         val tagDisaster = report.properties.disaster_type
+        val tagDate = report.properties.created_at
 
         // Load the image into the ImageView using Picasso
         if (!imageUrl.isNullOrEmpty()) {
@@ -69,6 +71,13 @@ class ReportAdapter(
             holder.tagDisasterType.text = disasterTypeInfo
         }
 
+        if ( tagDate == null || tagDate.isEmpty()) {
+            holder.tagCreationDate.text = "Tidak Disebutkan"
+        } else {
+            val formattedDate = ManagedDate().formatDateForCreationTag(tagDate)
+            holder.tagCreationDate.text = formattedDate
+        }
+
         holder.itemView.setOnClickListener {
             onReportItemClick(report)
         }
@@ -81,6 +90,7 @@ class ReportAdapter(
         val titleItem: TextView = itemView.findViewById(R.id.title_item)
         val descriptionItem: TextView = itemView.findViewById(R.id.desc_item)
         val tagDisasterType: TextView = itemView.findViewById(R.id.tag_disaster)
+        val tagCreationDate: TextView = itemView.findViewById(R.id.tag_date)
     }
 
 }
