@@ -41,34 +41,15 @@ class ButtonAdapter(
             button.isSelected = position == activeButtonPosition
             updateButtonBackground(button)
             button.setOnClickListener {
-//                onButtonClick(position)
-//                onButtonMarkerClick(position)
                 if(position != activeButtonPosition) {
                     val previousActivePosition = activeButtonPosition
                     activeButtonPosition = position
 
                     notifyDataSetChanged()
 
-
-//                    notifyItemChanged(previousActivePosition)
-//                    notifyItemChanged(activeButtonPosition)
-
                     onButtonClick(position)
                     onButtonMarkerClick(position)
                 }
-//                button.isSelected = !button.isSelected
-//                updateButtonBackground(button)
-
-//                action.performAction()
-//                // Perform action based on the button clicked
-//                when (action) {
-//                    "Action 1" -> performAction1()
-//                    "Action 2" -> performAction2()
-//                    // Add more cases for other actions as needed
-//                    else -> {
-//                        // Handle default action or do nothing
-//                    }
-//                }
             }
         }
 
@@ -85,17 +66,6 @@ class ButtonAdapter(
             button.setTextColor(textResources)
         }
 
-
-        private fun performAction1() {
-            // Implement action 1 logic here
-            Toast.makeText(itemView.context, "Action 1 clicked!", Toast.LENGTH_SHORT).show()
-        }
-
-
-        private fun performAction2() {
-            // Implement action 2 logic here
-            Toast.makeText(itemView.context, "Action 2 clicked!", Toast.LENGTH_SHORT).show()
-        }
     }
 
     fun resetButtonState() {
