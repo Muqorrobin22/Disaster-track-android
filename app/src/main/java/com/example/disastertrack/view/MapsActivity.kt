@@ -45,19 +45,21 @@ import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
 
-    private val disasterMarkers: MutableList<Marker> = mutableListOf()
+
+
 
     // Adding this for current location
+    private lateinit var mMap: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
     private lateinit var lastLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var recyclerViewReport: RecyclerView
     private lateinit var recyclerViewButton: RecyclerView
     private lateinit var reportAdapter: ReportAdapter
-
     private lateinit var filterInformation: TextView
+
+    private val disasterMarkers: MutableList<Marker> = mutableListOf()
 
     private val buttonActions = listOf(
         ActionBanjirImpl(),
@@ -67,7 +69,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ActionGempaImpl(),
         ActionBeranginImpl()
     )
-
 
     private val retrofit by lazy {
         Retrofit.Builder().baseUrl(BaseURL.BASE_URL.url)
@@ -101,12 +102,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             this.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        // Hide Action Bar
-//        supportActionBar?.hide()
-
-//        setSupportActionBar(findViewById(R.id.toolbar_custom))
-
-
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
@@ -114,12 +109,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
-//        val buttonActions = listOf("Banjir", "Kabut", "Gempa", "Kebakaran", "Gunung Meletus", "Berangin")
-//        val buttonActions = listOf(ActionBanjirImpl())
-
-//        val adapter = ButtonAdapter(buttonActions) { position ->
-//            onButtonClick(position)
-//        }
         val adapter = ButtonAdapter(
             buttonActions,
             onButtonClick = { position -> onButtonClick(position) },
@@ -177,10 +166,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             getReportsByProvince(selectedItem)
         }
 
-
         // get date
         val mPickDateButton = findViewById<FloatingActionButton>(R.id.fabGetDateByCalendar)
-//        val mShowSelectedDateText = findViewById<>()
 
         val materialDateBuilder : MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> = MaterialDatePicker.Builder.dateRangePicker()
 
@@ -188,22 +175,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val materialDatePicker = materialDateBuilder.build()
 
-        mPickDateButton.setOnClickListener { // getSupportFragmentManager() to
-            // interact with the fragments
-            // associated with the material design
-            // date picker tag is to get any error
-            // in logcat
+        mPickDateButton.setOnClickListener {
             Log.d("MainDate", "Opening..")
             materialDatePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER")
         }
 
         materialDatePicker.addOnPositiveButtonClickListener {
-//            val inputDateString: String = materialDatePicker.headerText
-//            val inputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
-//            val outputFormat = SimpleDateFormat("yyyy-MM-dd")
-//
-//            val date = inputFormat.parse(inputDateString)
-//            val outputDateString = outputFormat.format(date)
 
             var convertedDate = convertDateRange(materialDatePicker.headerText)
             val getDateByUser = convertedDate.split("/")
@@ -227,8 +204,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     fun convertDateRange(dateRange: String): String {
         val dateParts = dateRange.split(" – ")
-//        val startDate = parseDate(dateParts[0])
-//        val endDate = parseEndDate(dateParts[1])
         lateinit var startDate: Date
         lateinit var endDate : Date
 
@@ -251,7 +226,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     fun parseDate(dateString: String): Date {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
-//         SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
 
         return if ( dateString.contains(",")) {
             SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
@@ -267,7 +241,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     fun parseStartDateWithSameYear(dateString: String, year : Int): Date {
         val dateFormat = if (dateString.contains(",")) "MMM d, yyyy" else "MMM d"
-//         SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
 
         return if ( dateString.contains(",")) {
             SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(dateString)
@@ -349,7 +322,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun placeMarkerOnMapDisaster(currentLatLong: LatLng): Marker? {
         val markerOptions = MarkerOptions().position(currentLatLong)
         Log.d("MainMap", "lat long : ${currentLatLong}")
-        markerOptions.title("Lokasi : ${currentLatLong}") // You can set a title for the marker here
+        markerOptions.title("Lokasi : ${currentLatLong}")
         return mMap.addMarker(markerOptions)
     }
 
@@ -420,8 +393,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             recyclerViewReport.adapter = reportAdapter
                         }
 
-//                        reportAdapter = ReportAdapter(geometries)
-//                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
@@ -470,8 +441,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                                 recyclerViewReport.adapter = reportAdapter
                             }
 
-//                        reportAdapter = ReportAdapter(geometries)
-//                        recyclerViewReport.adapter = reportAdapter
                         } else {
                             emptyResultTextView.visibility = View.VISIBLE
                             emptyResultImageView.visibility = View.VISIBLE
@@ -506,8 +475,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val outputDateStr = outputFormat.format(inputDate)
             list_outputted_date.add(outputDateStr)
         }
-
-
 
         filterInformation.text = "Tanggal: ${list_outputted_date[0]} - ${list_outputted_date[1]}"
         filterInformation.visibility = View.VISIBLE
@@ -582,8 +549,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             recyclerViewReport.adapter = reportAdapter
                         }
 
-//                        reportAdapter = ReportAdapter(geometries)
-//                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response : ${response.body()}")
@@ -639,8 +604,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             emptyResultImageView.visibility = View.VISIBLE
                             recyclerViewReport.visibility = View.GONE
 
-                            // Clear existing markers before adding new ones
-//                            mMap.clear()
                         } else {
                             emptyResultTextView.visibility = View.GONE
                             emptyResultImageView.visibility = View.GONE
@@ -664,17 +627,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                             val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
                             mMap.moveCamera(cameraUpdate)
 
-//                            if (disasterMarkers.isNotEmpty()) {
-//                                val firstMarker = disasterMarkers[0]
-//                                Log.d("MainMap", "${firstMarker}")
-//                                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstMarker.position, 12f)
-//                                mMap.moveCamera(cameraUpdate)
-//                            }
                         }
 
-
-//                        reportAdapter = ReportAdapter(geometries)
-//                        recyclerViewReport.adapter = reportAdapter
                     }
 
                     Log.d("MainActivity", "response ${disasterType} : ${response.body()}")
