@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var reportAdapter: ReportAdapter
     private lateinit var filterInformation: TextView
     private lateinit var textBoundariesDate : TextView
+    private lateinit var exposedDrowdown: AutoCompleteTextView
 
     private val disasterMarkers: MutableList<Marker> = mutableListOf()
 //    var textBoundariesDate : TextView = findViewById(R.id.no_boundaries_date)
@@ -161,7 +162,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val selectAdapter = ArrayAdapter(this, R.layout.list_item_province, items)
         val exposedDropdownLayout: TextInputLayout = findViewById(R.id.choose_province_menu)
-        val exposedDrowdown: AutoCompleteTextView = findViewById(R.id.choose_provinc_menu_dropdown)
+        exposedDrowdown = findViewById(R.id.choose_provinc_menu_dropdown)
 
         exposedDrowdown.setAdapter(selectAdapter)
         exposedDrowdown.setOnItemClickListener { _, _, position, _ ->
@@ -290,6 +291,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         textBoundariesDate = findViewById(R.id.no_boundaries_date)
+
+        exposedDrowdown.setText("", false)
+
         val call = reportApiServiceImpl.getReportByCurrentDate()
         call.enqueue(object : Callback<ReportsData> {
             override fun onFailure(call: Call<ReportsData>, t: Throwable) {
@@ -365,6 +369,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val emptyResultTextView: TextView = findViewById(R.id.no_result)
         val emptyResultImageView: ImageView = findViewById(R.id.no_result_image)
         textBoundariesDate = findViewById(R.id.no_boundaries_date)
+
+        exposedDrowdown.setText("", false)
 
         val call = reportApiServiceImpl.getReportByYearStartToEnd(
             "${startDate}T00:00:00+0700",
@@ -669,6 +675,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun onButtonClick(position: Int) {
         val action = buttonActions[position]
         action.performAction()
+
+        exposedDrowdown.setText("", false)
 
         when (action) {
             is ActionBanjirImpl -> getReportsByDisaster(DisasterType.BANJIR.url)
