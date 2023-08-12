@@ -92,6 +92,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             getCurrentLocation()
         }
 
+        // get current news disaster
+        findViewById<FloatingActionButton>(R.id.fabGetHotNews).setOnClickListener {
+            getReportResponseByCurrentDate()
+        }
+
         // follow this code to get current location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
