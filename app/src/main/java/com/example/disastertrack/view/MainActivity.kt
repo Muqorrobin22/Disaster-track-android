@@ -440,6 +440,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         filterInformation.text = "Tanggal: ${list_outputted_date[0]} - ${list_outputted_date[1]}"
         filterInformation.visibility = View.VISIBLE
+
+        val adapter = ButtonAdapter(
+            buttonActions,
+            onButtonClick = { position -> onButtonClick(position) },
+            onButtonMarkerClick = { position -> onButtonMarkerClick(position) })
+        recyclerViewButton.adapter = adapter
+        recyclerViewButton.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        // Clear the button state and background when a new province is selected
+        adapter.resetButtonState()
+
     }
 
     private fun getReportsByProvince(province: String) {
