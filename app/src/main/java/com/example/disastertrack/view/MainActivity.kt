@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // report bencana
         recyclerViewReport = findViewById(R.id.recycler_view_report)
         recyclerViewReport.layoutManager = LinearLayoutManager(this)
-        getReportResponseByCurrentDate()
+        // getReportResponseByCurrentDate()
 
         // button disaster
         recyclerViewButton = findViewById(R.id.recycler_view_buttons_disaster)
@@ -349,6 +349,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         filterInformation = findViewById(R.id.text_filter)
 
         filterInformation.visibility = View.GONE
+
+        val adapter = ButtonAdapter(
+            buttonActions,
+            onButtonClick = { position -> onButtonClick(position) },
+            onButtonMarkerClick = { position -> onButtonMarkerClick(position) })
+        recyclerViewButton.adapter = adapter
+        recyclerViewButton.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        // Clear the button state and background when a new province is selected
+        adapter.resetButtonState()
     }
 
     private fun getReportResponseByPickedDate(startDate: String, endDate: String) {
