@@ -345,6 +345,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         })
+
+        filterInformation = findViewById(R.id.text_filter)
+
+        filterInformation.visibility = View.GONE
     }
 
     private fun getReportResponseByPickedDate(startDate: String, endDate: String) {
